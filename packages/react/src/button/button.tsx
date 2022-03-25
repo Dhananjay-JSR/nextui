@@ -9,6 +9,7 @@ import React, {
 import { useFocusRing } from '@react-aria/focus';
 import useWarning from '../use-warning';
 import ButtonDrip from '../utils/drip';
+import Loading from '../loading'
 import { CSS } from '../theme/stitches.config';
 import { NormalColors } from '../utils/prop-types';
 import { filterPropsWithGroup } from './utils';
@@ -23,6 +24,8 @@ import { __DEV__ } from '../utils/assertion';
 
 export interface Props {
   light?: boolean;
+  isLoading?: boolean;
+  isLoadingText?: string;
   color?: NormalColors;
   flat?: boolean;
   animated?: boolean;
@@ -43,6 +46,8 @@ export interface Props {
 const defaultProps = {
   clickable: true,
   ghost: false,
+  isLoading: false,
+  isLoadingText: "Loading",
   bordered: false,
   ripple: true,
   animated: true,
@@ -71,6 +76,8 @@ const Button = React.forwardRef<
     flat,
     children,
     disabled,
+    isLoading,
+    isLoadingText,
     animated,
     light,
     ripple,
@@ -133,7 +140,7 @@ const Button = React.forwardRef<
       bordered={bordered || ghost}
       clickable={clickable}
       data-state={getState}
-      disabled={disabled}
+      disabled={disabled ||isLoading}
       animated={animated}
       onClick={clickHandler}
       isFocusVisible={isFocusVisible}
@@ -160,7 +167,7 @@ const Button = React.forwardRef<
           </div>
         </>
       ) : (
-        <span className="nextui-button-text">{children}</span>
+        <span className="nextui-button-text">{isLoading?<><Loading css={{$$loadingColor: "grey"}}/> `${isLoadingText}`</>:children}</span>
       )}
       <ButtonDrip color="white" {...dripBindings} />
     </StyledButton>
